@@ -1,0 +1,50 @@
+{% extends 'default.html' %}
+{% block content %}
+<h1>Поиск новостей</h1>
+<form method="get" action="{% url 'news:news_search' %}">
+    <label for="date_filter">Позже даты:</label>
+    <input type="date" name="date_filter" id="date_filter">
+
+    <label for="title_filter">По названию:</label>
+    <input type="text" name="title_filter" id="title_filter">
+
+    <label for="author_filter">По автору:</label>
+    <input type="text" name="author_filter" id="author_filter">
+
+    <button type="submit">Искать</button>
+</form>
+<ul>
+    {% for news_item in news %}
+        <li>
+            <h2><a href="{% url 'news:news_detail' news_item.id %}">{{ news_item.title }}</a></h2>
+            <p>Автор: {{ news_item.author.username }}</p>
+            <p>Дата публикации: {{ news_item.pub_date|date:"d.m.Y H:i" }}</p>
+            <p>{{ news_item.content }}</p>
+        </li>
+    {% empty %}
+        <p>Нет результатов для отображения.</p>
+    {% endfor %}
+</ul>
+<div class="pagination">
+    <span class="step-links">
+        {% if news.has_previous %}
+            <a href="?page=1">&laquo; первая</a>
+            <a href="?page={{ news.previous_page_number }}">предыдущая</a>
+        {% endif %}
+        <br>
+        <span class="current-page">
+            Страница {{ news.number }} из {{ news.paginator.num_pages }}.
+        </span>
+        <br>
+        {% if news.has_next %}
+            <a href="?page={{ news.next_page_number }}">следующая</a>
+            <a href="?page={{ news.paginator.num_pages }}">последняя &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}
+
+
+
+
+

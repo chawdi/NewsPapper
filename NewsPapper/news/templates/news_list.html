@@ -1,7 +1,7 @@
 {% extends 'default.html' %}
 {% load custom_filters %}
 {% block content %}
-    <h1>Список новостей</h1>
+<h1 xmlns="http://www.w3.org/1999/html">Список новостей</h1>
     <p>Количество новостей: {{ news|length }}</p>
     <ul>
         {% for news_item in news %}
@@ -11,5 +11,25 @@
                 <p>{{ news_item.content|truncatechars:50|censor }}</p>
             </li>
         {% endfor %}
+        <a href="{% url 'news:news_search' %}">Перейти к поиску новостей</a>
+
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if news.has_previous %}
+                    <a href="?page=1">&laquo; первая</a>
+                    <a href="?page={{ news.previous_page_number }}">предыдущая</a>
+                {% endif %}
+                <br>
+        <span class="current-page">
+            Страница {{ news.number }} из {{ news.paginator.num_pages }}.
+        </span>
+                <br>
+        {% if news.has_next %}
+            <a href="?page={{ news.next_page_number }}">следующая</a>
+            <a href="?page={{ news.paginator.num_pages }}">последняя &raquo;</a>
+        {% endif %}
+        </span>
+      </div>
     </ul>
 {% endblock %}
