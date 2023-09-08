@@ -1,8 +1,39 @@
-from django.shortcuts import render
 from .models import News
+from .forms import NewsForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 # Create your views here.
+
+
+def news_create(request):
+    if request.method == 'POST':
+        form = NewsForm(request.POST)
+        if form.is_valid():
+            news = form.save()
+            return redirect('news:news_detail', pk=news.pk)
+    else:
+        form = NewsForm()
+    return render(request, 'news_create.html', {'form': form})
+
+
+def news_edit(request, pk):
+    news = get_object_or_404(News, pk=pk)
+    if request.method == 'POST':
+        form = NewsForm(request.POST, instance=news)
+        if form.is_valid():
+            news = form.save()
+            return redirect('news:news_detail', pk=news.pk)
+    else:
+        form = NewsForm(instance=news)
+    return render(request, 'news_edit.html', {'form': form, 'news': news})
+
+
+def news_delete(request, pk):
+    news = get_object_or_404(News, pk=pk)
+    if request.method == 'POST':
+        news.delete()
+        return redirect('news:news_list')
+    return render(request, 'news_delete.html', {'news': news})
 
 
 def news_list(request):
@@ -19,8 +50,8 @@ def news_list(request):
     return render(request, 'news_list.html', {'news': news})
 
 
-def news_detail(request, news_id):
-    news = get_object_or_404(News, pk=news_id)
+def news_detail(request, pk):
+    news = get_object_or_404(News, pk=pk)
     return render(request, 'news_detail.html', {'news': news})
 
 
