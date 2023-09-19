@@ -1,58 +1,42 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from .models import News
 from .forms import NewsForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import get_object_or_404, redirect, render
-# Create your views here.
+from django.shortcuts import render
 
 
-def news_create(request):
-    if request.method == 'POST':
-        form = NewsForm(request.POST)
-        if form.is_valid():
-            news = form.save()
-            return redirect('news:news_detail', pk=news.pk)
-    else:
-        form = NewsForm()
-    return render(request, 'news_create.html', {'form': form})
+class NewsCreateView(CreateView):
+    model = News
+    form_class = NewsForm
+    template_name = 'news_create.html'
+    success_url = reverse_lazy('news:news_list')
 
 
-def news_edit(request, pk):
-    news = get_object_or_404(News, pk=pk)
-    if request.method == 'POST':
-        form = NewsForm(request.POST, instance=news)
-        if form.is_valid():
-            news = form.save()
-            return redirect('news:news_detail', pk=news.pk)
-    else:
-        form = NewsForm(instance=news)
-    return render(request, 'news_edit.html', {'form': form, 'news': news})
+class NewsEditView(LoginRequiredMixin, UpdateView):
+    model = News
+    form_class = NewsForm
+    template_name = 'news_edit.html'
+    success_url = reverse_lazy('news:news_list')
 
 
-def news_delete(request, pk):
-    news = get_object_or_404(News, pk=pk)
-    if request.method == 'POST':
-        news.delete()
-        return redirect('news:news_list')
-    return render(request, 'news_delete.html', {'news': news})
+class NewsDeleteView(DeleteView):
+    model = News
+    template_name = 'news_delete.html'
+    success_url = reverse_lazy('news:news_list')
 
 
-def news_list(request):
-    news_list = News.objects.all()
-    paginator = Paginator(news_list, 10)
-
-    page = request.GET.get('page')
-    try:
-        news = paginator.page(page)
-    except PageNotAnInteger:
-        news = paginator.page(1)
-    except EmptyPage:
-        news = paginator.page(paginator.num_pages)
-    return render(request, 'news_list.html', {'news': news})
+class NewsListView(ListView):
+    model = News
+    template_name = 'news_list.html'
+    context_object_name = 'news'
+    paginate_by = 10
 
 
-def news_detail(request, pk):
-    news = get_object_or_404(News, pk=pk)
-    return render(request, 'news_detail.html', {'news': news})
+class NewsDetailView(DetailView):
+    model = News
+    template_name = 'news_detail.html'
 
 
 def news_search(request):
@@ -82,3 +66,4 @@ def news_search(request):
         news = paginator.page(paginator.num_pages)
 
     return render(request, 'news_search.html', {'news': news})
+

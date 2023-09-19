@@ -4,10 +4,10 @@ from . import views
 app_name = 'news'
 
 urlpatterns = [
-    path('', views.news_list, name='news_list'),
-    path('<int:pk>/', views.news_detail, name='news_detail'),
+    path('', views.NewsListView.as_view(), name='news_list'),
+    path('<int:pk>/', views.NewsDetailView.as_view(), name='news_detail'),
     path('search/', views.news_search, name='news_search'),
-    path('add/', views.news_create, name='news_create'),
-    path('<int:pk>/edit/', views.news_edit, name='news_edit'),
-    path('<int:pk>/delete/', views.news_delete, name='news_delete'),
+    path('add/', views.NewsCreateView.as_view(), name='news_create'),
+    path('<int:pk>/edit/', views.NewsEditView.as_view(), name='news_edit'),
+    path('<int:pk>/delete/', views.NewsDeleteView.as_view(), name='news_delete'),
 ]
