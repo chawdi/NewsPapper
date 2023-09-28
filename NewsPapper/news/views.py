@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from .models import News
@@ -7,24 +8,27 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 
 
-class NewsCreateView(CreateView):
+class NewsCreateView(PermissionRequiredMixin, CreateView):
     model = News
     form_class = NewsForm
     template_name = 'news_create.html'
     success_url = reverse_lazy('news:news_list')
+    permission_required = 'news.add_news'
 
 
-class NewsEditView(LoginRequiredMixin, UpdateView):
+class NewsEditView(PermissionRequiredMixin, UpdateView):
     model = News
     form_class = NewsForm
     template_name = 'news_edit.html'
     success_url = reverse_lazy('news:news_list')
+    permission_required = 'news.change_news'
 
 
-class NewsDeleteView(DeleteView):
+class NewsDeleteView(PermissionRequiredMixin, DeleteView):
     model = News
     template_name = 'news_delete.html'
     success_url = reverse_lazy('news:news_list')
+    permission_required = 'news.delete_news'
 
 
 class NewsListView(ListView):
