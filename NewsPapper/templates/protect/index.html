@@ -7,8 +7,21 @@
 
  <div>
    Здесь может содержаться персональная информация для каждого пользователя
- <div>
+ </div>
 
  <a class="btn btn-primary" href="sign/logout/">Выйти</a>
 
+{% if is_not_author %}
+
+<a class="btn btn-info" href="{% url 'protect:upgrade' %}">
+ Стать Автором!
+</a>
+{% else %}
+<h3>
+ Вы в группе "Author"
+</h3>
+{% endif %}
+<a class="btn btn-info" href="{% url 'news:news_list' %}">
+     На главную
+</a>
 {% endblock content %}

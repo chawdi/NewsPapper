@@ -9,6 +9,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView
 from .forms import RegisterForm
+from django.shortcuts import redirect
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
 
 
 class RegisterView(CreateView):
@@ -16,6 +19,8 @@ class RegisterView(CreateView):
    form_class = RegisterForm
    template_name = 'sign/signup.html'
    success_url = '/'
+
+
 
 
 class LoginView(FormView):
@@ -27,7 +32,7 @@ class LoginView(FormView):
    def form_valid(self, form):
        username = form.cleaned_data.get('username')
        password = form.cleaned_data.get('password')
-       user = authenticate(self.request,username=username, password=password)
+       user = authenticate(self.request, username=username, password=password)
        if user is not None:
            login(self.request, user)
        return super().form_valid(form)

@@ -15,7 +15,7 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-LOGIN_REDIRECT_URL = 'news:news_list'
+LOGIN_REDIRECT_URL = 'protect:index'
 LOGIN_URL = '/accounts/login/'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-x!+$lya0hhf&fln0zc0_boo*v%)j*5bq7r!hkay@wa212%fl2j
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+ACCOUNT_FORMS = {'signup': 'sign.forms.BasicSignupForm'}
 ALLOWED_HOSTS = ['127.0.0.1']
 # 74042579062-rtgpftgrv0qdd1kc441ij0qt1n93tbko.apps.googleusercontent.com
 SITE_ID = 1
